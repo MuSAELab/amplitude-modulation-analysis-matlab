@@ -67,10 +67,16 @@ n_channels = size(x , 2);
 % Number of Wavelets
 n_freqs = numel(freqs);
 
+% Number of samples for Wavetet family
+% This is equal to the number of samples needed to represent 2n cycles 
+% of a sine with frequency = fres(1)[Hz], sampled at fs [Hz]. 
+% This is done to ensure that every wavelet in the wavalet family will be 
+% close to 0 in the negative and positive edges
+n_samples_wav = round( (2 * n / freqs(1)) * fs);
+
 % Create time vector for Wavelet family
-szx = numel(x);
-half = floor(szx/2);
-if mod(szx,2) == 1 % odd samples
+half = floor(n_samples_wav/2);
+if mod(n_samples_wav,2) == 1 % odd samples
     time = (-(half):half)/fs;
 else % even samples
     time = (-(half-1):half)/fs;
