@@ -92,7 +92,7 @@ for iwav = 1 : n_freqs
     sinwave = exp(2*pi*1i*freqs(iwav).*time); 
     if normalization
         % each wavelet has unit energy sum(abs(wavelet).^2)) = 1
-        A = 1 / ( sqrt(fs)*((s(iwav)^2)*pi)^(1/4) );
+        A = 1 / ((s(iwav)^2) * pi)^(1/4);
     else 
         A = 1;
     end
