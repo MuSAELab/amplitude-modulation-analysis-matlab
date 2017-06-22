@@ -70,7 +70,7 @@ n_epochs = floor( (n_samples - size_epoch) / shift_epoch ) + 1 ;
 %markers indicates where the epoch starts, and the epoch contains 
 %size_epoch elements
 
-markers = ((1:n_epochs)'*shift_epoch)+1;
+markers = ((1:n_epochs-1)'*shift_epoch)+1;
 markers = [1; markers];
 
 %Divide data in epochs
@@ -82,8 +82,8 @@ for i_epoch = 1:n_epochs
     ix_center(i_epoch) = markers(i_epoch) -1 + half_epoch;
 end
 
-if (markers(end)~= n_samples) 
-    remainder = data(markers(end-1) + size_epoch : n_samples,:);
+if (markers(end) + size_epoch - 1 < n_samples) 
+    remainder = data(markers(end) + size_epoch : n_samples,:);
 else
     remainder = [];
 end

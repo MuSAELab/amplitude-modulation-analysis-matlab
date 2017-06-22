@@ -1,24 +1,20 @@
 function plot_modspectrogram_struct(modspectrogram_struct, ix, f_range, fm_range, c_range)
-% plot_modspectrogram_struct(spectrogram_struct, type)
+% plot_modspectrogram_struct(spectrogram_struct, ix, f_range, fm_range, c_range)
 % Plots the Modulation Spectrogram(s) in the modspectrogram_struct
 %
 % INPUTS:
 %  modspectrogram_struct   = Modulation Spectrogram structure
-%  ix                      = Array indicating the channels to be plotted
-%                            (all channels if empty)
-%                            If ix has one element, the plot will be
-%                            located in the current axes, otherwise, a new
-%                            figure will be created per plot
-%  f_range                 = Conventional frequency axis range [min, max] in (Hz)
-%  fm_range                = Modulation frequency axis range [min, max] in (Hz)
-%  c_range                 = Color axis range [min, max] in (dB)
-%
-%
+%  Optional:
+%   ix                     = Array indicating the channels to be plotted
+%                             (all channels if empty)
+%                             If ix has one element, the plot will be
+%                             located in the current axes, otherwise, a new
+%                             figure will be created per plot
+%   f_range                = Conventional frequency axis range [min, max] in (Hz)
+%   fm_range               = Modulation frequency axis range [min, max] in (Hz)
+%   c_range                = Color axis range [min, max] in (dB) 
 
-% 
-
-
-% Validate 'type' argumet
+% Validate 'ix' argumet
 if ~exist('ix','var') || isempty(ix)
     ix = 1 : size (modspectrogram_struct.pwr_modspec, 3);
 end

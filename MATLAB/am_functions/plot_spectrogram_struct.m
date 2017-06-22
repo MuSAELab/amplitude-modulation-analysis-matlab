@@ -1,5 +1,5 @@
 function plot_spectrogram_struct(spectrogram_struct, ix, t_range, f_range, c_range)
-% plot_spectrogram_struct(spectrogram_struct, type)
+% plot_spectrogram_struct(spectrogram_struct, ix, t_range, f_range, c_range)
 % Plots teh Spectrogram(s) in the spectrogram struct
 %
 % INPUTS:
@@ -13,7 +13,7 @@ function plot_spectrogram_struct(spectrogram_struct, ix, t_range, f_range, c_ran
 %  f_range              = Frequency axis range [min, max] in (Hz)
 %  c_range              = Color axis range [min, max] in (dB)     
 
-% Validate 'type' argumet
+% Validate 'ix' argumet
 if ~exist('ix','var') || isempty(ix)
     ix = 1 : size(spectrogram_struct.pwr_spectrogram, 3);
 end

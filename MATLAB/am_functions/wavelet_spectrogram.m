@@ -73,7 +73,7 @@ end
 [wcoef,wfam] = cmorlet_wavelet(x, fs, freq_vct, n_cycles, true);
 % power from Wavelet coefficients
 pwr_spectrogram = abs(wcoef).^2;
-pwr_spectrogram = pwr_spectrogram * 2 / n_samples;
+pwr_spectrogram = pwr_spectrogram * 2 / (fs * n_samples);
 
 % output 'spectrogram_struct' structure
 spectrogram_struct.wavelet_coef = wcoef;
