@@ -20,7 +20,7 @@ clear
 clc;
 
 %% ECG data (1 channel) 
-load('.\data\ecg_data.mat');
+load('../example_data/ecg_data.mat');
 
 %% Segment parameters
 segment_length  = 5; % seconds

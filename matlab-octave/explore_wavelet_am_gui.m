@@ -1,6 +1,6 @@
-function explore_stfft_am_gui(X, fs, Name)
+function explore_wavelet_am_gui(X, fs, Name)
 % Analysis of a Signal in Frequency-Frequency Domain
-% Time -> Time-Frequency transformation performed with STFFT
+% Time -> Time-Frequency transformation performed with Wavelet Transform (Complex Morlet)
 %
 % INPUTS:
 %  X     Real-valued column-vector signal or set of signals [n_samples, n_channels]
@@ -12,6 +12,10 @@ function explore_stfft_am_gui(X, fs, Name)
 % April 2017
 
 clc;
+
+% Global variable with the value of the Key Pressed
+global key_pressed
+key_pressed = '';
 
 %% verify input arguments
 if ~exist('X','var')
@@ -39,21 +43,20 @@ if ~exist('Name','var') || isempty(Name) || numel(Name) ~= n_channels
 end
 
 % check if 'am_functions' folder exist, if does, add it to the MATLAB path
-if exist('.\am_functions', 'dir')
-    addpath('.\am_functions');
+if exist('./am_functions', 'dir')
+    addpath('./am_functions');
 end
 
 % verify dependencies
-if ~exist('strfft_modspectrogram.m','file');
-    error('Dependencies for explore_stfft_am_gui were not satisfied');
+if ~exist('wavelet_modspectrogram.m','file');
+    error('Dependencies for explore_wavelet_am_gui were not satisfied');
 end
 
 %% Amplitude Modulation Analysis
 % default Modulation Analysis parameters
-win_size_sec = 0.5;   % window length for the STFFT
-win_shft_sec = 0.02;  % shift between consecutive windows (seconds)
-seg_size_sec = 8;     % segment of signal to compute the Modulation Spectrogram (seconds)
-seg_shft_sec = 8;     % shift between consecutive segments (seconds)
+n_cycles     =  6;    % number of cycles (for Complex Morlet)
+seg_size_sec =  8;    % segment of signal to compute the Modulation Spectrogram (seconds)
+seg_shft_sec =  8;    % shift between consecutive segments (seconds)
 freq_range   = [];    % limits [min, max] for the conventional frequency axis (Hz)
 mfreq_range  = [];    % limits [min, max] for the modulation frequency axis (Hz)
 freq_color   = [];    % limits [min, max] for the power in Spectrogram (dB)
@@ -71,48 +74,54 @@ h_area1 = [];
 h_area2 = [];
 x_segments = [];
 name = '';
-win_size_smp = [];
-win_shft_smp = [];
 
 %% Live GUI
-h_fig = figure('Name', 'Explore STFFT Amplitude Modulation', 'KeyPressFcn', {@key_pressed});
+h_fig = figure('Name', 'Explore Wavelet Amplitude Modulation', 'KeyPressFcn', {@key_pressed_fcn});
 first_run();
 
-    % callback function for user-event (pressing a key) inside the GUI
-    function key_pressed(~, callbackdata)
-        commandKey = callbackdata.Character;
-        % handles user request in GUI
-        switch commandKey
-            case char(27) %ESC: Exit
-                exit_gui()
-            case char(28) %Left arrow: Previous Segment
-                ix_segment = ix_segment - 1;
-                update_plots();
-            case char(29) %Right arrow: Next Segment
-                ix_segment = ix_segment + 1;
-                update_plots();
-            case char(30) %Up arrow: Previous
-                ix_channel = ix_channel - 1;
-                first_run();
-            case char(31) %Down arrow: Next Channel
-                ix_channel = ix_channel + 1;
-                first_run();
-            case {'a', 'A'}    %A: Back 5 Segments
-                ix_segment = ix_segment - 5;
-                update_plots();
-            case {'d', 'D'}    %D: Advance 5 Segment
-                ix_segment = ix_segment + 5;
-                update_plots();
-            case {'w', 'W'}    %W  Previous 5 channels
-                ix_channel = ix_channel - 5;
-                first_run();
-            case {'s', 'S'}    %S  Next 5 Channels
-                ix_channel = ix_channel + 5;
-                first_run();
-            case {'u', 'U'};
-                update_parameters();
-        end
+while true
+   pause(0.01);
+   % handles user request in GUI
+    switch key_pressed
+        case 'escape' %ESC: Exit
+            break
+        case {'leftarrow', 'left'} %Left arrow: Previous Segment
+            ix_segment = ix_segment - 1;
+            key_pressed = '';
+            update_plots();
+        case {'rightarrow', 'right'} %Right arrow: Next Segment
+            ix_segment = ix_segment + 1;
+            key_pressed = '';
+            update_plots();
+        case {'uparrow', 'up'} %Up arrow: Previous
+            ix_channel = ix_channel - 1;
+            key_pressed = '';
+            first_run();
+        case {'downarrow', 'down'} %Down arrow: Next Channel
+            ix_channel = ix_channel + 1;
+            key_pressed = '';
+            first_run();
+        case {'a', 'A'}    %A: Back 5 Segments
+            ix_segment = ix_segment - 5;
+            key_pressed = '';
+            update_plots();
+        case {'d', 'D'}    %D: Advance 5 Segment
+            ix_segment = ix_segment + 5;
+            key_pressed = '';
+            update_plots();
+        case {'w', 'W'}    %W  Previous 5 channels
+            ix_channel = ix_channel - 5;
+            key_pressed = '';
+            first_run();
+        case {'s', 'S'}    %S  Next 5 Channels
+            ix_channel = ix_channel + 5;
+            key_pressed = '';
+            first_run();
+        case {'u', 'U'};
+            key_pressed = '';
+            update_parameters();
     end
+end
 
     % executed at first time running or when an update in parameters is performed
     function first_run()
@@ -124,9 +133,7 @@ first_run();
         ix_channel = max([1, ix_channel]);
         ix_channel = min([n_channels, ix_channel]);
 
-        % STFFT modulation spectrogram parameters in samples
-        win_size_smp = round(win_size_sec * fs);  % (samples)
-        win_shft_smp = round(win_shft_sec * fs);  % (samples)
+        % wavelet modulation spectrogram parameters in samples
         seg_size_smp = round(seg_size_sec * fs);  % (samples)
         seg_shft_smp = round(seg_shft_sec * fs);  % (samples)
 
@@ -145,7 +152,7 @@ first_run();
         time_lim = get(gca, 'XLim' );
 
         % compute and plot complete spectrogram
-        x_spectrogram = strfft_spectrogram(x_probe, fs, win_size_smp, win_shft_smp, [], [], name);
+        x_spectrogram = wavelet_spectrogram(x_probe, fs, n_cycles, [], name);
         h_tf = subplot(4,2,[3,4]);
         plot_spectrogram_struct(x_spectrogram, [], [], freq_range, freq_color)
         set(gca, 'XLim', time_lim);
@@ -172,16 +179,16 @@ first_run();
         % compute and plot Modulation Spectrogram
         clc;
         disp('computing modulation spectrogram...');
-        x_stft_modspec = strfft_modspectrogram(x, fs, win_size_smp, win_shft_smp, 2, [], 2, [], name);
+        x_wavelet_modspec = wavelet_modspectrogram(x, fs, n_cycles, [], 2, [], name);
         subplot(4,2,[6,8])
-        plot_modspectrogram_struct(x_stft_modspec, [], freq_range, mfreq_range, mfreq_color)
+        plot_modspectrogram_struct(x_wavelet_modspec, [], freq_range, mfreq_range, mfreq_color)
         % Uncomment for log axes
         %set(gca,'XScale','log');
         %set(gca,'YScale','log');
 
         % plot spectrogram for segment
         subplot(4,2,7)
-        plot_spectrogram_struct(x_stft_modspec.spectrogram_structure, [], [], freq_range, freq_color)
+        plot_spectrogram_struct(x_wavelet_modspec.spectrogram_structure, [], [], freq_range, freq_color)
 
         % plot time series for segment
         subplot(4,2,5)
@@ -204,9 +211,7 @@ first_run();
         fprintf('segment size  (seconds): %0.3f\n', seg_size_sec);
         fprintf('segment shift (seconds): %0.3f\n', seg_shft_sec);
         fprintf('segment position  (sec): %0.3f\n', seg_ini_sec)
-        fprintf('window size   (seconds): %0.3f\n', win_size_sec);
-        fprintf('window shift  (seconds): %0.3f\n', win_shft_sec);
-        fprintf('windows per segment    : %d\n', x_stft_modspec.n_windows);
+        fprintf('n cycles Complex Morlet: %d\n', n_cycles);
 
         drawnow();
     end
@@ -216,18 +221,17 @@ first_run();
         % GUI to get new parameters
         prompt = {'Segment         (seconds): ', ...
                   'Segment shift   (seconds): ', ...
-                  'Window size     (seconds): ', ...
-                  'Window shift    (seconds): ', ...
-                  'Freq Conv. min,Max (Hz): ', ...
-                  'Spectr Pwr min,Max (dB): ', ...
-                  'Freq Mod.  min,Max (Hz): ', ...
-                  'ModSpec Pwr min,Max(dB): ', ...
+                  'N Cycles                 : ', ...
+                  'Freq Conv. min,Max  (Hz) : ', ...
+                  'Spectr Pwr min,Max  (dB) : ', ...
+                  'Freq Mod.  min,Max  (Hz) : ', ...
+                  'ModSpec Pwr min,Max (dB) : ', ...
                   };
 
         win_name = 'Modulation Analysis Parameters'; numlines = 1;
 
         defaultanswer = {num2str(seg_size_sec), num2str(seg_shft_sec), ...
-                         num2str(win_size_sec), num2str(win_shft_sec), ...
+                         num2str(n_cycles), ...
                          num2str(freq_range), num2str(freq_color), ...
                          num2str(mfreq_range), num2str(mfreq_color),...
                          };
@@ -240,22 +244,19 @@ first_run();
         if ~isempty(answer)
             seg_size_sec = str2double(answer{1});  % (seconds)
             seg_shft_sec = str2double(answer{2});  % (seconds)
-            win_size_sec = str2double(answer{3});  % (seconds)
-            win_shft_sec = str2double(answer{4});  % (seconds)
-            freq_range   = str2double(answer{5});  % (Hz)
-            freq_color   = str2double(answer{6});  % (dB)
-            mfreq_range  = str2double(answer{7});  % (Hz)
-            mfreq_color  = str2double(answer{8});  % (dB)
+            n_cycles     = str2double(answer{3});  % (cycles)
+            freq_range   = str2double(answer{4});  % (Hz)
+            freq_color   = str2double(answer{5});  % (dB)
+            mfreq_range  = str2double(answer{6});  % (Hz)
+            mfreq_color  = str2double(answer{7});  % (dB)
 
             % call first_run()
             first_run();
         end
     end
 
-    % if the user press ESC, close the GUI and clean console
-    function exit_gui()
-        close(h_fig);
-        clc;
-    end
+% if the user press ESC, close the GUI and clean console
+close(h_fig);
+clc;
 
 end

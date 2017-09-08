@@ -32,25 +32,25 @@
 %
 
 %% ECG data (1 channel) using STFFT-based Modulation Spectrogram
-load('.\data\ecg_data.mat');
+load('../example_data/ecg_data.mat');
 
 % STFFT Modulation Spectrogram
 explore_stfft_am_gui(x, fs, 'ECG');
 
 %% ECG data (1 channel) using wavelet-based Modulation Spectrogram
-load('.\data\ecg_data.mat');
+load('../example_data/ecg_data.mat');
 
 % Wavelet Modulation Spectrogram
 explore_wavelet_am_gui(x, fs, 'ECG');
 
 %% EEG data (7 channels) using STFFT-based Modulation Spectrogram
-load('.\data\eeg_data.mat');
+load('../example_data/eeg_data.mat');
 
 % STFFT Modulation Spectrogram
 explore_stfft_am_gui(x, fs, ch_names);
 
 %% EEG data (7 channels) using wavelet-based Modulation Spectrogram
-load('.\data\eeg_data.mat');
+load('../example_data/eeg_data.mat');
 
 % Wavelet Modulation Spectrogram
 explore_wavelet_am_gui(x, fs, ch_names);

@@ -21,7 +21,9 @@ for i_area = 1 : n_areas
     x2 = X(i_area, 2);
     hold on;
     h = fill([x1, x1, x2, x2], y_limits2, color_cell{i_area});
-    alpha(alpha_v);
+    if ~is_octave()
+        alpha(alpha_v);
+    end
     hold off 
 end
 
