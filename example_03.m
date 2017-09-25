@@ -20,7 +20,7 @@ clear
 clc;
 
 %% ECG data (1 channel) 
-load('../example_data/ecg_data.mat');
+load('./example_data/ecg_data.mat');
 
 %% Segment parameters
 segment_length  = 5; % seconds
@@ -49,30 +49,30 @@ for i_segment = 1 : n_segments
     x_tmp_wavelet = squeeze(x_segmented(:,:, i_segment));
     
     % Wavelet-based Spectrogram and Modulation Spectrogram 
-    wavelet_spect_struct_a(i_segment) = wavelet_spectrogram(x_tmp_wavelet, fs);
-    wavelet_modul_struct_a(i_segment) = wavelet_modspectrogram(x_tmp_wavelet, fs);   
+    wavelet_spectrogram_data_a(i_segment) = wavelet_spectrogram(x_tmp_wavelet, fs);
+    wavelet_modulation_spectrogram_data_a(i_segment) = wavelet_modulation_spectrogram(x_tmp_wavelet, fs);   
 end
 toc
 
 %% B. Spectrogram > Epoching > Modulation
 tic
 % Spectrogram of the Full Signal with STFFT and Wavelets
-wavelet_spect_struct = wavelet_spectrogram(x ,fs);
+wavelet_spect_data = wavelet_spectrogram(x ,fs);
 
 % Epoching the Spectrogram
-wavelet_spect_segmented = epoching(wavelet_spect_struct.pwr_spectrogram, segment_length * fs);
+wavelet_spect_segmented = epoching(wavelet_spect_data.power_spectrogram, segment_length * fs);
 n_segments = size(wavelet_spect_segmented, 3);
 
 % The Spectograms are scaled to represent the power of the full signal
 wavelet_spect_segmented  = n_segments * wavelet_spect_segmented;
 
-% Initialize structures, for sake of plotting
-wavelet_spect_struct_b  = wavelet_spect_struct_a;
-wavelet_modul_struct_b = wavelet_modul_struct_a;
+% Initialize arrays, for sake of plotting
+wavelet_spectrogram_data_b  = wavelet_spectrogram_data_a;
+wavelet_modulation_spectrogram_data_b = wavelet_modulation_spectrogram_data_a;
 
 % From each Segment of the Spectrogram, compute the Modulation Spectrogram
 for i_segment = 1 : n_segments
-    wavelet_spect_struct_b(i_segment).pwr_spectrogram = wavelet_spect_segmented(:,:,i_segment);
+    wavelet_spectrogram_data_b(i_segment).pwr_spectrogram = wavelet_spect_segmented(:,:,i_segment);
 
     % Square Root is obtained to work with the Instantaneous Amplitude
     x_tmp_wavelet = sqrt(squeeze(wavelet_spect_segmented(:,:, i_segment )));
@@ -80,8 +80,8 @@ for i_segment = 1 : n_segments
     % PSD of the Spectrogram Segment
     mod_psd_wavelet = rfft_psd(x_tmp_wavelet, fs);
     
-    % Place results in corresponding structure
-    wavelet_modul_struct_b(i_segment).pwr_modspec = mod_psd_wavelet.PSD' / mod_psd_wavelet.freq_delta; 
+    % Place results in corresponding index
+    wavelet_modulation_spectrogram_data_b(i_segment).pwr_modspec = mod_psd_wavelet.PSD' / mod_psd_wavelet.freq_delta; 
 end 
 
 toc
@@ -93,33 +93,33 @@ for i_segment = 1 : n_segments
     if i_segment == random_segment
         figure()
         subplot(1,2,1)
-        plot_spectrogram_struct(wavelet_spect_struct_a(i_segment), 1);
+        plot_spectrogram_data(wavelet_spectrogram_data_a(i_segment), 1);
         subplot(1,2,2)
-        plot_spectrogram_struct(wavelet_spect_struct_b(i_segment), 1);
+        plot_spectrogram_data(wavelet_spectrogram_data_b(i_segment), 1);
 
         figure()
         subplot(1,2,1)
-        plot_modspectrogram_struct(wavelet_modul_struct_a(i_segment), 1);
+        plot_modulation_spectrogram_data(wavelet_modulation_spectrogram_data_a(i_segment), 1);
         subplot(1,2,2)
-        plot_modspectrogram_struct(wavelet_modul_struct_b(i_segment), 1); 
+        plot_modulation_spectrogram_data(wavelet_modulation_spectrogram_data_b(i_segment), 1); 
     end
 
-    pwr_spect_wavelet_a(i_segment) = sum(sum(wavelet_spect_struct_a(i_segment).pwr_spectrogram) * wavelet_spect_struct_a(1).freq_delta * wavelet_spect_struct_a(1).time_delta) ;
-    pwr_spect_wavelet_b(i_segment) = sum(sum(wavelet_spect_struct_b(i_segment).pwr_spectrogram) * wavelet_spect_struct_b(1).freq_delta * wavelet_spect_struct_b(1).time_delta) ;
+    pwr_spectrogram_wavelet_a(i_segment) = sum(sum(wavelet_spectrogram_data_a(i_segment).power_spectrogram) * wavelet_spectrogram_data_a(1).freq_delta * wavelet_spectrogram_data_a(1).time_delta) ;
+    pwr_spectrogram_wavelet_b(i_segment) = sum(sum(wavelet_spectrogram_data_b(i_segment).power_spectrogram) * wavelet_spectrogram_data_b(1).freq_delta * wavelet_spectrogram_data_b(1).time_delta) ;
 
-    pwr_modul_wavelet_a(i_segment) = sum(sum(wavelet_modul_struct_a(i_segment).pwr_modspec) * wavelet_modul_struct_a(1).freq_delta * wavelet_modul_struct_a(1).modfreq_delta);
-    pwr_modul_wavelet_b(i_segment) = sum(sum(wavelet_modul_struct_b(i_segment).pwr_modspec) * wavelet_modul_struct_b(1).freq_delta * wavelet_modul_struct_b(1).modfreq_delta);
+    pwr_modulation_spectrogram_wavelet_a(i_segment) = sum(sum(wavelet_modulation_spectrogram_data_a(i_segment).power_modulation_spectrogram) * wavelet_modulation_spectrogram_data_a(1).freq_delta * wavelet_modulation_spectrogram_data_a(1).freq_mod_delta);
+    pwr_modulation_spectrogram_wavelet_b(i_segment) = sum(sum(wavelet_modulation_spectrogram_data_b(i_segment).power_modulation_spectrogram) * wavelet_modulation_spectrogram_data_b(1).freq_delta * wavelet_modulation_spectrogram_data_b(1).freq_mod_delta);
 end
 
 %% Power comparison Spectrogram and Modulation Spectrogram
 figure()
 title('Total Power per Epoch, based on Spectrogram')
-plot([pwr_spect_wavelet_a', pwr_spect_wavelet_b'])
+plot([pwr_spectrogram_wavelet_a', pwr_spectrogram_wavelet_b'])
 legend('Wavelet Spectrogram A', 'Wavelet Spectrogram B')
-mean([pwr_spect_wavelet_a', pwr_spect_wavelet_b'])
+mean([pwr_spectrogram_wavelet_a', pwr_spectrogram_wavelet_b'])
 
 figure()
 title('Total Power per Epoch, based on Modulation Spectrogram')
-plot([pwr_modul_wavelet_a', pwr_modul_wavelet_b'])
+plot([pwr_modulation_spectrogram_wavelet_a', pwr_modulation_spectrogram_wavelet_b'])
 legend('Wavelet Modulation Spectrogram A', 'Wavelet Modulation Spectrogram B')
-mean([pwr_modul_wavelet_a', pwr_modul_wavelet_b'])
+mean([pwr_modulation_spectrogram_wavelet_a', pwr_modulation_spectrogram_wavelet_b'])

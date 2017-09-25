@@ -1,30 +1,26 @@
-function [wcoef,wfam] = cmorlet_wavelet(x, fs, freqs, n, normalization)
+function [wcoef,wfam] = cmorlet_wavelet(x, fs, freq_vct, n, normalization)
 %[wcoef,wfam] = cmorlet_wavelet(x, fs, freqs, n, normalization)
-%CMORLET_WAVELET Wavelet transform of ONE signal
-%   Continuous wavelet tranform using the Complex Morlet Wavelet
+%CMORLET_WAVELET Perform the continuous wavelet (CWT) tranform using the complex Morlet wavelet.
 %
-%   WCOEF has the same class as X
+%     Parameters
+%     ----------
+%     x  : 1D array with shape (n_samples) or 2D array with shape (n_samples, n_channels)
+%     fs : Sampling frequency in Hz
+%     freq : 1D array with frequencies to compute the CWT
+%            (Default = [1 : 1 : fs/2])
+%     n : Number of cicles inside the Gaussian curve (Default 6)
+%     normalization: (Default True) Scale each wavelet to have energy equal to 1
 % 
-%   WCOEF = CMORLET_WAVELET(SIGNAL, FS, FREQS, N, NORMALIZATION) 
-%   obtains the Wavelet transform using the Complex Morlet wavelet 
-%   as mother wavelet using the definition 
-%   cmor = A * exp(1i*2*pi*f*time)* exp(-time.^2./(2*s^2))
-%   with s = n / (2*pi*f) 
-%   
-%   if NORMALIZATION  is absent or equal to TRUE:
-%   A = 1 / ( sqrt(szx)*((s(iwav)^2)*pi)^(1/4) );
 % 
-%   X     = real-valued signal or set of signals [n_samples, n_channels]
-%   FS    = Sampling frequency
-%   FREQS  = Array with the frequencies where the wavelet convolution is computed
-%   n     = Relation between the number of cicles allowed by the Gaussian
-%           defaul n = 6 
-%   NORMALIZATION = Defines the value of A
-%                   default normalization = true
-%   WCOEF =  complex coefficients of the wavelet transform for frequencies in FREQS 
-%            WCOEF = [n_samples, numel(FREQS),n_channels]
-%   WFAM  =  wavelet family (set of wavlets) used. Size [n_samples, numel(FREQS)]
-%
+%     Returns
+%     -------
+%     wcoef : Complex wavelet coefficients 
+%             2D array with shape [n_samples, n_freqs] if `x` is 1D array
+%             3D array with shape [n_samples, n_freqs, n_channels] if `x` is 2D array
+%     
+%     wfam  : 2D array with shape [n_wavelet_samples, n_freqs] where each column
+%             corresponds to the a member of the wavelet family
+%    
 %
 % Example-1:
 % Test signal [x]: 5 seconds 10Hz sine followed by 8 seconds 25Hz sine
@@ -44,8 +40,6 @@ function [wcoef,wfam] = cmorlet_wavelet(x, fs, freqs, n, normalization)
 %  xlabel('seconds');
 %  ylabel('Hz')
 %
-%   Raymundo Cassani.
-%   June 2014
 
 % Get class of x
 x_class = class(x);
@@ -60,19 +54,24 @@ if ~exist('normalization','var') || isempty(normalization)
     normalization = true;
 end
 
+% validate 'freq_vct' argument
+if ~exist('freq_vct','var') || isempty(freq_vct)
+    freq_vct = 1 : floor(fs / 2);
+end
+
 % Number of samples
 n_samples = size(x , 1);
 % Number of channels
 n_channels = size(x , 2);
 % Number of Wavelets
-n_freqs = numel(freqs);
+n_freqs = numel(freq_vct);
 
 % Number of samples for Wavetet family
 % This is equal to the number of samples needed to represent 2n cycles 
 % of a sine with frequency = fres(1)[Hz], sampled at fs [Hz]. 
 % This is done to ensure that every wavelet in the wavalet family will be 
 % close to 0 in the negative and positive edges
-n_samples_wav = round( (2 * n / freqs(1)) * fs);
+n_samples_wav = round( (2 * n / freq_vct(1)) * fs);
 
 % Create time vector for Wavelet family
 half = floor(n_samples_wav/2);
@@ -87,9 +86,9 @@ wfam = zeros(numel(time), n_freqs, x_class);
 
 % for each frequency defined in FREQ, create its respective Wavelet
 for iwav = 1 : n_freqs
-    s(iwav) = n/(2*pi*freqs(iwav));
+    s(iwav) = n/(2*pi*freq_vct(iwav));
     gaussian_win = exp(-time.^2./(2*s(iwav)^2));   
-    sinwave = exp(2*pi*1i*freqs(iwav).*time); 
+    sinwave = exp(2*pi*1i*freq_vct(iwav).*time); 
     if normalization
         % each wavelet has unit energy sum(abs(wavelet).^2)) = 1
         A = 1 / ((s(iwav)^2) * pi)^(1/4);

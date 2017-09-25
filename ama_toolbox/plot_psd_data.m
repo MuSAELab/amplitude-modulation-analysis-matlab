@@ -1,20 +1,26 @@
-function plot_psd_struct(psd_struct, ix, a_range, f_range)
-% plot_psd_struct(spectrogram_struct, ix, a_range, f_range)
-% Plots teh Spectrogram(s) in the spectrogram struct
-%
-% INPUTS:
-%  psd_struct           = Spectrogram structure
-%  ix                   = Array indicating the channels to be plotted
-%                         (all channels if empty)
-%                         If ix has one element, the plot will be
-%                         located in the current axes, otherwise, a new
-%                         figure will be created per plot
-%  a_range              = Amplitude axis range [min, max] in (seconds)
-%  f_range              = Frequency axis range [min, max] in (Hz)
+function plot_psd_data(psd_data, ix, a_range, f_range)
+% PLOT_PSD_DATA(spectrogram_struct, ix, a_range, f_range)
+% Plot the PSD related to the `psd_data`
+%         
+%     Parameters
+%     ----------
+%     psd_data : 
+%         Structure with PSD data
+%     ix : Index of the signal (channel) to plot
+%         (Default, all the channels, a new figure for each)
+%     p_range : Power range
+%         (Default [minimum power, maximum power])
+%     f_range : Frequency range
+%         (Default [minimum frequency, maximum frequency])
+%     
+%     Returns
+%     -------
+%     If only a plot is requested, it is plotted in the existen axes (created if needed)
+%     If many plots are requested, a new figure is created for each plot
 
 % Validate 'type' argumet
 if ~exist('ix','var') || isempty(ix)
-    ix = 1 : size(psd_struct.PSD, 3);
+    ix = 1 : size(psd_data.PSD, 3);
 end
 
 % Check if ix has ONLY one element
@@ -47,9 +53,9 @@ for i_channel = ix
             h_ax = axes();
     end   
     plot_one_psd(h_ax, ...
-                 psd_struct.PSD(:, :, i_channel), ...
-                 psd_struct.freq_axis, ...
-                 psd_struct.channel_names{i_channel},...
+                 psd_data.PSD(:, :, i_channel), ...
+                 psd_data.freq_axis, ...
+                 psd_data.channel_names{i_channel},...
                  a_range, f_range);
 end
 

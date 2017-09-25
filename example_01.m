@@ -1,16 +1,16 @@
 %% Example 01
-% This example shows the use of the GUI to explore Amplitude Modulations
+% This example shows the use of the GUI to explore Amplitude Modulation
 % for ECG data and EEG data
 %
-% The 'explore_strfft_am_gui()' computes the Modulation Spectrogram.  
+% The 'explore_strfft_ama_gui()' computes the Modulation Spectrogram.  
 %   It uses the Short Time Real Fourier Fast Transform (STRFFT) to compute 
 %   the Spectrogram, after rFFT is used to obtain the Modulation Spectrogram
 %
-% The 'explore_wavelet_am_gui()' computes the Modulation Spectrogram using 
+% The 'explore_wavelet_ama_gui()' computes the Modulation Spectrogram using 
 %   It uses the Wavelet transform with Complex Morlet wavelet to compute 
 %   the Spectrogram, after rFFT is used to obtain the Modulation Spectrogram
 %
-% Usage for explore_*_am_gui()
+% Usage for explore_*_ama_gui()
 %
 % Once the GUI is executed, it accepts the following commands
 %
@@ -32,25 +32,25 @@
 %
 
 %% ECG data (1 channel) using STFFT-based Modulation Spectrogram
-load('../example_data/ecg_data.mat');
+load('./example_data/ecg_data.mat');
 
 % STFFT Modulation Spectrogram
-explore_stfft_am_gui(x, fs, 'ECG');
+explore_stfft_ama_gui(x, fs, 'ECG');
 
 %% ECG data (1 channel) using wavelet-based Modulation Spectrogram
-load('../example_data/ecg_data.mat');
+load('./example_data/ecg_data.mat');
 
 % Wavelet Modulation Spectrogram
-explore_wavelet_am_gui(x, fs, 'ECG');
+explore_wavelet_ama_gui(x, fs, 'ECG');
 
 %% EEG data (7 channels) using STFFT-based Modulation Spectrogram
-load('../example_data/eeg_data.mat');
+load('./example_data/eeg_data.mat');
 
 % STFFT Modulation Spectrogram
-explore_stfft_am_gui(x, fs, ch_names);
+explore_stfft_ama_gui(x, fs, ch_names);
 
 %% EEG data (7 channels) using wavelet-based Modulation Spectrogram
-load('../example_data/eeg_data.mat');
+load('./example_data/eeg_data.mat');
 
 % Wavelet Modulation Spectrogram
-explore_wavelet_am_gui(x, fs, ch_names);
+explore_wavelet_ama_gui(x, fs, ch_names);
