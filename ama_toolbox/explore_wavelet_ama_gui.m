@@ -7,9 +7,8 @@ function explore_wavelet_ama_gui(X, fs, Name, c_map)
 %  fs    Sampling frequency (Hz)
 % Optional:
 %  Name  (Optional) Name of the signal(s), String or Cell Array (Strings)
+%  c_map (Optional) Colormap, Default 'viridis'
 %
-% Raymundo Cassani
-% April 2017
 
 clc;
 
@@ -32,6 +31,11 @@ n_channels = size(X, 2);
 % verify channel names
 if exist('Name','var') && ischar(Name) && n_channels == 1
     Name = {Name};
+end
+
+% Validate 'c_map' argumet
+if ~exist('c_map','var') || isempty(c_map)
+    c_map = 'viridis';
 end
 
 % generate channel names if needed
@@ -150,12 +154,14 @@ end
         plot_signal(x_probe(:), fs, name);
         colorbar();
         time_lim = get(gca, 'XLim' );
+        h_area1 = [];
 
         % compute and plot complete spectrogram
         x_spectrogram = wavelet_spectrogram(x_probe, fs, n_cycles, [], name);
         h_tf = subplot(4,2,[3,4]);
-        plot_spectrogram_data(x_spectrogram, [], [], freq_range, freq_color)
+        plot_spectrogram_data(x_spectrogram, [], [], freq_range, freq_color, c_map)
         set(gca, 'XLim', time_lim);
+        h_area2 = [];
 
         % update plots
         update_plots();
@@ -168,7 +174,7 @@ end
         ix_segment = min([n_segments, ix_segment]);
 
         % delete old areas (if existent)
-        if exist('h_area1', 'var')
+        if ~isempty(h_area1)
             delete(h_area1);
             delete(h_area2);
         end
@@ -181,14 +187,14 @@ end
         disp('computing modulation spectrogram...');
         x_wavelet_modspec = wavelet_modulation_spectrogram(x, fs, n_cycles, [], 2, [], name);
         subplot(4,2,[6,8])
-        plot_modulation_spectrogram_data(x_wavelet_modspec, [], freq_range, mfreq_range, mfreq_color)
+        plot_modulation_spectrogram_data(x_wavelet_modspec, [], freq_range, mfreq_range, mfreq_color,c_map)
         % Uncomment for log axes
         %set(gca,'XScale','log');
         %set(gca,'YScale','log');
 
         % plot spectrogram for segment
         subplot(4,2,7)
-        plot_spectrogram_data(x_wavelet_modspec.spectrogram_data, [], [], freq_range, freq_color)
+        plot_spectrogram_data(x_wavelet_modspec.spectrogram_data, [], [], freq_range, freq_color,c_map)
 
         % plot time series for segment
         subplot(4,2,5)
