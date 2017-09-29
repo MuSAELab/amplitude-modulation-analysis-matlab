@@ -35,7 +35,7 @@
 load('./example_data/ecg_data.mat');
 
 % STFFT Modulation Spectrogram
-explore_stfft_ama_gui(x, fs, 'ECG');
+explore_stfft_ama_gui(x, fs, 'ECG', 'jet');
 
 %% ECG data (1 channel) using wavelet-based Modulation Spectrogram
 load('./example_data/ecg_data.mat');

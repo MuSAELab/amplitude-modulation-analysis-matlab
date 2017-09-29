@@ -28,7 +28,7 @@ if ~exist('ix','var') || isempty(ix)
 end
 
 % Validate 'c_map' argumet
-if ~exist('c_map','var') || isempty(ix)
+if ~exist('c_map','var') || isempty(c_map)
     c_map = 'viridis';
 end
 
