@@ -20,7 +20,7 @@ function plot_psd_data(psd_data, ix, a_range, f_range)
 
 % Validate 'type' argumet
 if ~exist('ix','var') || isempty(ix)
-    ix = 1 : size(psd_data.PSD, 3);
+    ix = 1 : size(psd_data.PSD, 2);
 end
 
 % Check if ix has ONLY one element
@@ -53,14 +53,14 @@ for i_channel = ix
             h_ax = axes();
     end   
     plot_one_psd(h_ax, ...
-                 psd_data.PSD(:, :, i_channel), ...
+                 psd_data.PSD(:, i_channel), ...
                  psd_data.freq_axis, ...
                  psd_data.channel_names{i_channel},...
                  a_range, f_range);
 end
 
     function plot_one_psd(h_ax, X_pwr, f_ax, title_str, a_range, f_range) 
-        X_plot = 10*log10(X_pwr(:,:,1)' + eps);
+        X_plot = 10*log10(X_pwr(:,1)' + eps);
         plot(h_ax, f_ax, X_plot );
         xlabel('Frequency (Hz)')
         ylabel('Power (dB/Hz)')
