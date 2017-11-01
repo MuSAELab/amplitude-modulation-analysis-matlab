@@ -66,13 +66,9 @@ n_segments = size(wavelet_spect_segmented, 3);
 % The Spectograms are scaled to represent the power of the full signal
 wavelet_spect_segmented  = n_segments * wavelet_spect_segmented;
 
-% Initialize arrays, for sake of plotting
-wavelet_spectrogram_data_b  = wavelet_spectrogram_data_a;
-wavelet_modulation_spectrogram_data_b = wavelet_modulation_spectrogram_data_a;
-
 % From each Segment of the Spectrogram, compute the Modulation Spectrogram
 for i_segment = 1 : n_segments
-    wavelet_spectrogram_data_b(i_segment).pwr_spectrogram = wavelet_spect_segmented(:,:,i_segment);
+    wavelet_spectrogram_power_b{i_segment} = wavelet_spect_segmented(:,:,i_segment);
 
     % Square Root is obtained to work with the Instantaneous Amplitude
     x_tmp_wavelet = sqrt(squeeze(wavelet_spect_segmented(:,:, i_segment )));
@@ -81,11 +77,21 @@ for i_segment = 1 : n_segments
     mod_psd_wavelet = rfft_psd(x_tmp_wavelet, fs);
     
     % Place results in corresponding index
-    wavelet_modulation_spectrogram_data_b(i_segment).pwr_modspec = mod_psd_wavelet.PSD' / mod_psd_wavelet.freq_delta; 
+    wavelet_modulation_spectrogram_power_b{i_segment} = mod_psd_wavelet.PSD' / mod_psd_wavelet.freq_delta; 
 end 
 
 toc
 %% Comparison
+
+% Create structures for Method B, for sake of plotting
+wavelet_spectrogram_data_b  = wavelet_spectrogram_data_a;
+wavelet_modulation_spectrogram_data_b = wavelet_modulation_spectrogram_data_a;
+
+for i_segment = 1 : n_segments
+    wavelet_spectrogram_data_b(i_segment).power_spectrogram = wavelet_spectrogram_power_b{i_segment};
+    wavelet_modulation_spectrogram_data_b(i_segment).power_modulation_spectrogram = wavelet_modulation_spectrogram_power_b{i_segment};
+end
+
 % One segment is randomly chosen 
 random_segment = randi(n_segments);
 
