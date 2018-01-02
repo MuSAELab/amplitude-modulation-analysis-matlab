@@ -73,13 +73,15 @@ n_freqs = numel(freq_vct);
 % close to 0 in the negative and positive edges
 n_samples_wav = round( (2 * n / freq_vct(1)) * fs);
 
+% The wavelet will be symmetrical around 0
+if mod(n_samples_wav,2) == 0 % even samples
+    n_samples_wav = n_samples_wav +1;
+end
+
 % Create time vector for Wavelet family
 half = floor(n_samples_wav/2);
-if mod(n_samples_wav,2) == 1 % odd samples
-    time = (-(half):half)/fs;
-else % even samples
-    time = (-(half-1):half)/fs;
-end
+time = (-(half):half)/fs;
+
 
 % initialize Wavelet family matrix
 wfam = zeros(numel(time), n_freqs, x_class);
