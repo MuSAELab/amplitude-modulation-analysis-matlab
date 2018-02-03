@@ -1,6 +1,6 @@
 # Amplitude Modulation Analysis Toolbox
 
-The Amplitude Modulation Analysis Toolbox, for MATLAB / Octave, provides functions to compute and visualize the time-frequency and frequency-frequency domain representations of real signals.
+The Amplitude Modulation Analysis Toolbox, for **MATLAB / Octave**, provides functions to compute and visualize the time-frequency and frequency-frequency domain representations of real signals. The **Python 3** version of this toolbox can be found here: https://github.com/MuSAELab/amplitude-modulation-analysis-module
 
 The Toolbox includes a GUI implementation, which facilitates the exploration of the amplitude modulation by allowing changing parameters online.
 
