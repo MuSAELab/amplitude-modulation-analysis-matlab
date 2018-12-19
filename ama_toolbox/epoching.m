@@ -75,6 +75,11 @@ markers = [1; markers];
 epochs = zeros(samples_epoch,n_channels,n_epochs, data_class);
 ix_center = zeros(n_epochs,1, data_class);
 
+if n_epochs == 0
+    remainder = data;
+    return
+end
+
 for i_epoch = 1:n_epochs
     epochs(:,:,i_epoch) = data( markers(i_epoch) : markers(i_epoch) + samples_epoch -1 ,:);
     ix_center(i_epoch) = markers(i_epoch) -1 + half_epoch;
