@@ -76,7 +76,7 @@ n_samples  = size(x, 1);
 % generate default channel names
 if isempty(channel_names)
     for ic = 1 : n_channels
-        channel_names{ic} = sprintf('CH-%02d',ic);
+        channel_names{ic} = sprintf('Signal-%02d',ic);
     end
 end
 

@@ -87,7 +87,7 @@ n_fft_x =  fft_factor_x * n_windows;
 % generate default channel names
 if isempty(channel_names)
     for ic = 1 : n_channels
-        channel_names{ic} = sprintf('CH-%02d',ic);
+        channel_names{ic} = sprintf('Signal-%02d',ic);
     end
 end
 

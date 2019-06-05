@@ -62,8 +62,8 @@ end
     function plot_one_psd(h_ax, X_pwr, f_ax, title_str, a_range, f_range) 
         X_plot = 10*log10(X_pwr(:,1)' + eps);
         plot(h_ax, f_ax, X_plot );
-        xlabel('Frequency (Hz)')
-        ylabel('Power (dB/Hz)')
+        xlabel('frequency (Hz)')
+        ylabel('power (dB/Hz)')
         set(h_ax, 'XMinorTick','on');
         set(h_ax, 'YMinorTick','on');
         if not(isempty(f_range))
