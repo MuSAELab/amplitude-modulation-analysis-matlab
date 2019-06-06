@@ -1,5 +1,5 @@
 function spectrogram_data = wavelet_spectrogram(x, fs, n_cycles, freq_vct, channel_names)
-%spectrogram_struct = WAVELET_SPECTROGRAM(x, fs, n_cycles, freq_vct, channel_names)
+%spectrogram_data = WAVELET_SPECTROGRAM(x, fs, n_cycles, freq_vct, channel_names)
 %     Compute the Spectrogram using the Complex Morlet wavelet for one or a set of REAL signals 'x'. 
 %     
 %     Parameters

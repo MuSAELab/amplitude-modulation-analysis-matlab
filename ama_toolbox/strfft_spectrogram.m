@@ -1,5 +1,5 @@
 function spectrogram_data = strfft_spectrogram(x, fs, win_size, win_shift, n_fft, win_funct, channel_names)
-%spectrogram_struct = STRFFT_SPECTROGRAM(x, fs, win_size, win_shift, n_fft, win_funct, channel_names)
+%spectrogram_data = STRFFT_SPECTROGRAM(x, fs, win_size, win_shift, n_fft, win_funct, channel_names)
 %     Compute the Short Time real FFT Spectrogram for one or a set of REAL signals 'x'.
 %         
 %     Parameters

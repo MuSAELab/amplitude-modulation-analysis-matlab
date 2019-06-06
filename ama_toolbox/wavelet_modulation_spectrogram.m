@@ -1,5 +1,5 @@
 function modulation_spectrogram_data = wavelet_modulation_spectrogram( x, fs, n_cycles, freq_vct, fft_factor_x, win_funct_x, channel_names)
-%modspect_struct = WAVELET_MODSPECTROGRAM( x, fs, n_cycles, freq_vct, fft_factor_x, win_funct_x, channel_names)
+%modulation_spectrogram_data = WAVELET_MODSPECTROGRAM( x, fs, n_cycles, freq_vct, fft_factor_x, win_funct_x, channel_names)
 %     Compute the Modulation Spectrogram using the Wavelet for one or a set of REAL signals 'x'.
 %         
 %     Parameters

@@ -1,5 +1,5 @@
 function psd_data = rfft_psd(x, fs, n_fft, win_funct, channel_names)
-%psd_struct = RFFT_PSD(x, fs, n_fft, win_funct, channel_names)
+%psd_data = RFFT_PSD(x, fs, n_fft, win_funct, channel_names)
 %
 %     Compute the PSD for one or a set of REAL signals.
 %         

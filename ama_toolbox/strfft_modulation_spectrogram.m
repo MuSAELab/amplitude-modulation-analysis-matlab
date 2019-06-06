@@ -1,5 +1,5 @@
 function modulation_spectrogram_data = strfft_modulation_spectrogram( x, fs, win_size, win_shift, fft_factor_y, win_funct_y, fft_factor_x, win_funct_x, channel_names)
-%modspect_struct = STRFFT_MODSPECTROGRAM( x, fs, win_size, win_shift, fft_factor_y, win_funct_y, fft_factor_x, win_funct_x, channel_names)
+%modulation_spectrogram_data = STRFFT_MODSPECTROGRAM( x, fs, win_size, win_shift, fft_factor_y, win_funct_y, fft_factor_x, win_funct_x, channel_names)
 % Compute the Modulation Spectrogram for one or a set of REAL signals 'x'.
 %         
 %     Parameters
