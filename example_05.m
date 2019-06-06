@@ -1,18 +1,18 @@
-%% Example 04
+%% Example 05
 % This example shows the use of the transfomrs and their inverses 
-%
+% 
 % rfft()                            Fourier transform for real-valued signals 
 % irfft()                           Inverse Fourier transform for real-valued signals 
-%
+% 
 % rfft_psd()                        Computes PSD data from x(f)
 % irfft_psd()                       Recovers x(t) from its PSD data
-%
-% strfft_spectrogram()              Compute Spectrogram data using STFFT
+% 
+% strfft_spectrogram()              Computes Spectrogram data using STFFT
 % istrfft_modulation_spectrogram()  Recovers x(t) from its STFFT Spectrogram data 
-%
-% wavelet_spectrogram()             Compute Spectrogram using CWT
+% 
+% wavelet_spectrogram()             Computes Spectrogram using CWT
 % iwavelet_modulation_spectrogram() Recovers x(t) from its CWT Spectrogram data
-%
+% 
 
 %% signal 
 fs = 2000;
@@ -87,7 +87,7 @@ fo = subplot(4,1,4);
 plot_signal(xo, fs, 'Recovered x(t)')
 subplot(4,1,[2,3]);
 plot_spectrogram_data(xi_cwt)
-title('STFT Spectrogram of x(t)')
+title('CWT Spectrogram of x(t)')
 linkaxes([fi, fo], 'xy')
 r = corrcoef(xi, xo);
 fprintf('Correlation: %0.3f \r\n', r(2) );
@@ -121,7 +121,7 @@ fo = subplot(4,1,4);
 plot_signal(xo, fs, 'Recovered x(t)')
 subplot(4,1,[2,3]);
 plot_modulation_spectrogram_data(xi_mod_cwt, [], [0, 1000], [0, 10])
-title('STFT Modulation Spectrogram of x(t)')
+title('CWT Modulation Spectrogram of x(t)')
 linkaxes([fi, fo], 'xy')
 r = corrcoef(xi, xo);
 fprintf('Correlation: %0.3f \r\n', r(2) );
