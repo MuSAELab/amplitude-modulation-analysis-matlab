@@ -4,7 +4,7 @@ function plot_signal(x, fs, name)
 %     Parameters
 %     ----------
 %     x : 
-%         1D Signal as column or row Vector 
+%         1D or 2D Signals as column vectors 
 %     fs :
 %         Sampling frequency in Hz
 %     name :

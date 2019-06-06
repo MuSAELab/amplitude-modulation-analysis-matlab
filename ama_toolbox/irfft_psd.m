@@ -21,7 +21,7 @@ function x = irfft_psd(psd_data)
 rFFT_data = psd_data.rFFT;
 f_ax = psd_data.freq_axis;
 fs = psd_data.fs;
-win_funct = psd_data.win_funct;
+win_function = psd_data.win_function;
 n_samples = psd_data.n_samples;
 n_channels = size(rFFT_data, 2);
 
@@ -35,7 +35,7 @@ elseif f_ax(end) - fs/2 < 1000 * eps
 end
 
 % Window RMS
-win = window(win_funct, n_samples);
+win = window(win_function, n_samples);
 win_rms = sqrt(sum(win.^2) / n_samples);
 
 % IRFFT
@@ -46,6 +46,6 @@ x_tmp = irfft(X, n_fft);
 x = x_tmp(1 : n_samples, :);
 
 % Un-Windowing
-win = window(win_funct,n_samples);
+win = window(win_function,n_samples);
 win_mat = repmat(win, 1, n_channels);
 x = x ./ win_mat;

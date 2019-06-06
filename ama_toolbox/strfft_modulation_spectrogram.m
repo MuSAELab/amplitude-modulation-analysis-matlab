@@ -1,5 +1,5 @@
-function modulation_spectrogram_data = strfft_modulation_spectrogram( x, fs, win_size, win_shift, fft_factor_y, win_funct_y, fft_factor_x, win_funct_x, channel_names)
-%modulation_spectrogram_data = STRFFT_MODSPECTROGRAM( x, fs, win_size, win_shift, fft_factor_y, win_funct_y, fft_factor_x, win_funct_x, channel_names)
+function modulation_spectrogram_data = strfft_modulation_spectrogram( x, fs, win_size, win_shift, fft_factor_y, win_function_y, fft_factor_x, win_function_x, channel_names)
+%modulation_spectrogram_data = STRFFT_MODSPECTROGRAM( x, fs, win_size, win_shift, fft_factor_y, win_function_y, fft_factor_x, win_function_x, channel_names)
 % Compute the Modulation Spectrogram for one or a set of REAL signals 'x'.
 %         
 %     Parameters
@@ -22,8 +22,6 @@ function modulation_spectrogram_data = strfft_modulation_spectrogram( x, fs, win
 %         (Default 'Hamming')   
 %     n_fft : Number of samples to compute the FFT
 %             (Default = n_samples in array x)   
-%     win_funct : Window function applied to the signal 
-%         (Default 'Hamming')
 %     channel_names : Names of the signals
 %         (Default Signal-XX with XX 1, 2, ... n_channels) 
 % 
@@ -54,9 +52,9 @@ function modulation_spectrogram_data = strfft_modulation_spectrogram( x, fs, win
 %            Number of elements utilized to perform the 1st FFT
 %        n_fft_x :
 %            Number of elements utilized to perform the 2nd FFT
-%        win_funct_y :
+%        win_function_y :
 %            Window to apply in the 1st rFFT            
-%        win_funct_x :
+%        win_function_x :
 %            Window to apply in the 2nd rFFT                      
 %        n_windows :
 %            Number of ST windows
@@ -70,14 +68,14 @@ function modulation_spectrogram_data = strfft_modulation_spectrogram( x, fs, win
 % get class of x
 x_class = class(x);
 
-% validate 'win_funct_y' argument
-if ~exist('win_funct_y','var') || isempty(win_funct_y)
-    win_funct_y = 'hamming';
+% validate 'win_function_y' argument
+if ~exist('win_function_y','var') || isempty(win_function_y)
+    win_function_y = 'hamming';
 end
 
-% validate 'win_funct_x' argument
-if ~exist('win_funct_x','var') || isempty(win_funct_x)
-    win_funct_x = 'hamming';
+% validate 'win_function_x' argument
+if ~exist('win_function_x','var') || isempty(win_function_x)
+    win_function_x = 'hamming';
 end
 
 % validate 'fft_factor_y' argument
@@ -99,7 +97,7 @@ if ~exist('channel_names','var') || isempty(channel_names)
 end
 
 % compute STFFT spectrogram
-spectrogram_data = strfft_spectrogram(x, fs, win_size, win_shift, n_fft_y, win_funct_y, channel_names);
+spectrogram_data = strfft_spectrogram(x, fs, win_size, win_shift, n_fft_y, win_function_y, channel_names);
 [n_windows, n_freqs, n_channels] =  size(spectrogram_data.rFFT_spectrogram);
 % Number of elements for the 2nd FFT
 n_fft_x =  fft_factor_x * n_windows;
@@ -124,7 +122,7 @@ for i_channel = 1 : n_channels
     %spectrogram_1ch = real(squeeze(spectrogram_data.rFFT_spectrogram(:,:,i_channel)));
 
     % compute 'rfft_psd' on each frequency timeseries
-    mod_psd_struct = rfft_psd(spectrogram_1ch, fs_mod, n_fft_x, win_funct_x, channel_names );
+    mod_psd_struct = rfft_psd(spectrogram_1ch, fs_mod, n_fft_x, win_function_x, channel_names );
 
     if i_channel == 1
         % modulation frequency axis
@@ -159,8 +157,8 @@ modulation_spectrogram_data.win_size_samples = win_size;
 modulation_spectrogram_data.win_shift_samples = win_shift;
 modulation_spectrogram_data.n_fft_x = n_fft_x;
 modulation_spectrogram_data.n_fft_y = n_fft_y;
-modulation_spectrogram_data.win_funct_y = win_funct_y;
-modulation_spectrogram_data.win_funct_x = win_funct_x;
+modulation_spectrogram_data.win_function_y = win_function_y;
+modulation_spectrogram_data.win_function_x = win_function_x;
 modulation_spectrogram_data.n_windows = n_windows;
 modulation_spectrogram_data.n_samples = spectrogram_data.n_samples;
 modulation_spectrogram_data.spectrogram_data = spectrogram_data;

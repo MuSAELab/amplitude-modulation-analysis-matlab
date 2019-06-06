@@ -21,18 +21,18 @@ function x = istrfft_modulation_spectrogram(modulation_spectrogram_data)
 % Number of channels from Modspectrogram structure
 n_channels = size(modulation_spectrogram_data.rFFT_modulation_spectrogram, 3);
 
-% Prepare psd_tmp_struct to perform irFFT on Modulation Spectogram
-psd_tmp_struct.freq_axis = modulation_spectrogram_data.freq_mod_axis;
-psd_tmp_struct.fs = modulation_spectrogram_data.fs_mod;
-psd_tmp_struct.win_funct = modulation_spectrogram_data.win_funct_x;
-psd_tmp_struct.n_samples = modulation_spectrogram_data.n_windows;
+% Prepare psd_tmp_data to perform irFFT on Modulation Spectogram
+psd_tmp_data.freq_axis = modulation_spectrogram_data.freq_mod_axis;
+psd_tmp_data.fs = modulation_spectrogram_data.fs_mod;
+psd_tmp_data.win_function = modulation_spectrogram_data.win_function_x;
+psd_tmp_data.n_samples = modulation_spectrogram_data.n_windows;
 
 
 for i_channel = 1 : n_channels
     % Slide with the rFFT coeffients of the 2nd FFT 
-    psd_tmp_struct.rFFT = transpose(modulation_spectrogram_data.rFFT_modulation_spectrogram(:,:,i_channel));   
+    psd_tmp_data.rFFT = transpose(modulation_spectrogram_data.rFFT_modulation_spectrogram(:,:,i_channel));   
     % Recovers the Square Root of the Power Spectrogram
-    sqrt_pwr_spectrogram = irfft_psd(psd_tmp_struct);
+    sqrt_pwr_spectrogram = irfft_psd(psd_tmp_data);
     % Power Spectrogram
     pwr_spectrogram = sqrt_pwr_spectrogram .^ 2;
     % Scale Power Spectrogram by (n_windows * time_delta)
@@ -43,10 +43,10 @@ for i_channel = 1 : n_channels
     pwr_spectrogram = pwr_spectrogram / (1 / modulation_spectrogram_data.spectrogram_data.n_fft .^2);
     % Divde by 2 all the elements except DC and the Nyquist point (in even case)  
     pwr_spectrogram = pwr_spectrogram / 2;
-    pwr_spectrogram(:, 1, :) = pwr_spectrogram(:, 1, :) * 2;
+    pwr_spectrogram(:, 1) = pwr_spectrogram(:, 1) * 2;
     if ~mod(modulation_spectrogram_data.spectrogram_data.n_fft, 2)
         % NFFT was even, then 
-        pwr_spectrogram(:, end, :) = pwr_spectrogram(:, end, :) * 2;
+        pwr_spectrogram(:, end) = pwr_spectrogram(:, end) * 2;
     end
     spectrogram_abs = sqrt(pwr_spectrogram);
     % Recovers the Angle values of the Spectrogram

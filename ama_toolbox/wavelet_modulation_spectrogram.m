@@ -1,5 +1,5 @@
-function modulation_spectrogram_data = wavelet_modulation_spectrogram( x, fs, n_cycles, freq_vct, fft_factor_x, win_funct_x, channel_names)
-%modulation_spectrogram_data = WAVELET_MODSPECTROGRAM( x, fs, n_cycles, freq_vct, fft_factor_x, win_funct_x, channel_names)
+function modulation_spectrogram_data = wavelet_modulation_spectrogram( x, fs, n_cycles, freq_vct, fft_factor_x, win_function_x, channel_names)
+%modulation_spectrogram_data = WAVELET_MODSPECTROGRAM( x, fs, n_cycles, freq_vct, fft_factor_x, win_function_x, channel_names)
 %     Compute the Modulation Spectrogram using the Wavelet for one or a set of REAL signals 'x'.
 %         
 %     Parameters
@@ -40,7 +40,7 @@ function modulation_spectrogram_data = wavelet_modulation_spectrogram( x, fs, n_
 %            Modulation-frequency step (Hz)
 %        n_fft_x :
 %            Number of elements utilized to perform the FFT
-%        win_funct_x :
+%        win_function_x :
 %            Window to apply in the 2nd rFFT                      
 %        n_samples :
 %            Number of samples of the signal or signals 'x'
@@ -62,9 +62,9 @@ if ~exist('n_cycles','var') || isempty(n_cycles)
     n_cycles = 6;
 end
 
-% validate 'win_funct_x' argument
-if ~exist('win_funct_x','var') || isempty(win_funct_x)
-    win_funct_x = 'hamming';
+% validate 'win_function_x' argument
+if ~exist('win_function_x','var') || isempty(win_function_x)
+    win_function_x = 'hamming';
 end
 
 % validate 'fft_factor_x' argument
@@ -104,7 +104,7 @@ for i_channel = 1 : n_channels
     %spectrogram_1ch = real(squeeze(spectrogram_data.rFFT_spectrogram(:,:,i_channel)));
 
     % Compute rfft_psd on each frequency timeseries
-    mod_psd_struct = rfft_psd(spectrogram_1ch, fs_mod, n_fft_x, win_funct_x, channel_names );
+    mod_psd_struct = rfft_psd(spectrogram_1ch, fs_mod, n_fft_x, win_function_x, channel_names );
 
     if i_channel == 1
         % modulation frequency axis
@@ -136,7 +136,7 @@ modulation_spectrogram_data.freq_delta = spectrogram_data.freq_delta;
 modulation_spectrogram_data.freq_mod_axis = fmod_ax;
 modulation_spectrogram_data.freq_mod_delta = fmod_delta;
 modulation_spectrogram_data.n_fft_x = n_fft_x;
-modulation_spectrogram_data.win_funct_x = win_funct_x;
+modulation_spectrogram_data.win_function_x = win_function_x;
 modulation_spectrogram_data.n_samples = spectrogram_data.n_samples;
 modulation_spectrogram_data.spectrogram_data = spectrogram_data;
 modulation_spectrogram_data.channel_names = channel_names;

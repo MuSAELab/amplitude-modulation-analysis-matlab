@@ -11,8 +11,6 @@ function x = iwavelet_spectrogram(spectrogram_data)
 %     -------
 %     x  : 1D array with shape (n_samples) or
 %          2D array with shape (n_samples, n_channels)
-%     x_epoched   = Segments form the signal or set of signals utilized to
-%                   create the spectrogram in spectrogram_struct
 %
 % Example:
 % xi = randn(1000,1);

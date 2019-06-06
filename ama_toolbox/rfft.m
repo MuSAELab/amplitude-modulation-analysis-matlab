@@ -8,7 +8,7 @@ function y = rfft(x, n, dim)
 %     ----------
 %     x : 1D array with shape (n_samples) or 2D array with shape (n_samples, n_channels)
 %     n : Number of samples to compute the FFT
-%     dim : Dimension to compute the RFFT (Default: Last dimension in `x`) 
+%     dim : Dimension to compute the RFFT (Default: first array dimension whose size does not equal 1) 
 % 
 %     Returns
 %     -------

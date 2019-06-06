@@ -1,5 +1,5 @@
-function spectrogram_data = strfft_spectrogram(x, fs, win_size, win_shift, n_fft, win_funct, channel_names)
-%spectrogram_data = STRFFT_SPECTROGRAM(x, fs, win_size, win_shift, n_fft, win_funct, channel_names)
+function spectrogram_data = strfft_spectrogram(x, fs, win_size, win_shift, n_fft, win_function, channel_names)
+%spectrogram_data = STRFFT_SPECTROGRAM(x, fs, win_size, win_shift, n_fft, win_function, channel_names)
 %     Compute the Short Time real FFT Spectrogram for one or a set of REAL signals 'x'.
 %         
 %     Parameters
@@ -14,7 +14,7 @@ function spectrogram_data = strfft_spectrogram(x, fs, win_size, win_shift, n_fft
 %         Shift between consecutive windows (samples)   
 %     n_fft : Number of samples to compute the FFT
 %             (Default = n_samples in array x)   
-%     win_funct : Window function applied to the signal 
+%     win_function : Window function applied to the signal 
 %         (Default 'Hamming')
 %     channel_names : Names of the signals
 %         (Default Signal-XX with XX 1, 2, ... n_channels) 
@@ -42,7 +42,7 @@ function spectrogram_data = strfft_spectrogram(x, fs, win_size, win_shift, n_fft
 %            Shift between consecutive windows (samples)   
 %        n_fft :
 %            Number of elements utilized to perform FFT    
-%        win_funct :
+%        win_function :
 %            Window applied to the data in 'x'           
 %        n_windows :
 %            Number of ST windows
@@ -55,8 +55,8 @@ function spectrogram_data = strfft_spectrogram(x, fs, win_size, win_shift, n_fft
 x_class = class(x);
 
 % validate 'window_funct' argument
-if ~exist('win_funct','var') || isempty(win_funct)
-    win_funct = 'hamming';
+if ~exist('win_function','var') || isempty(win_function)
+    win_function = 'hamming';
 end
 
 % validate 'n_fft' argument
@@ -104,7 +104,7 @@ end
 for i_window = 1 : n_windows
     % ith epoch of the signal or signals
     x_epoch = squeeze(x_epoched(:, :, i_window));
-    psd_struct = rfft_psd(x_epoch, fs, n_fft, win_funct, channel_names);
+    psd_struct = rfft_psd(x_epoch, fs, n_fft, win_function, channel_names);
 
     % initialize arrays for spectrogram data
     if i_window == 1
@@ -136,7 +136,7 @@ spectrogram_data.time_delta = t_delta;
 spectrogram_data.win_size_samples  = win_size;
 spectrogram_data.win_shift_samples = win_shift;
 spectrogram_data.n_fft = n_fft;
-spectrogram_data.win_funct = win_funct;
+spectrogram_data.win_function = win_function;
 spectrogram_data.n_windows = n_windows;
 spectrogram_data.n_samples = n_samples;
 spectrogram_data.channel_names = channel_names;

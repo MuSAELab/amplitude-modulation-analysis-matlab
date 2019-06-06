@@ -28,7 +28,7 @@ win_shift = spectrogram_data.win_shift_samples;
 psd_struct.fs   = spectrogram_data.fs;
 psd_struct.channel_names = spectrogram_data.channel_names;
 psd_struct.freq_axis = spectrogram_data.freq_axis;
-psd_struct.win_funct = spectrogram_data.win_funct;
+psd_struct.win_function = spectrogram_data.win_function;
 psd_struct.n_samples = win_size;
 
 % Initialize rFFT_slice and x_epoched variables
