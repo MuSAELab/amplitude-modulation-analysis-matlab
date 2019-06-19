@@ -8,22 +8,19 @@ function y = rfft(x, n, dim)
 %     ----------
 %     x : 1D array with shape (n_samples) or 2D array with shape (n_samples, n_channels)
 %     n : Number of samples to compute the FFT
-%     dim : Dimension to compute the RFFT (Default: Last dimension in `x`) 
+%     dim : Dimension to compute the RFFT (Default: first array dimension whose size does not equal 1) 
 % 
 %     Returns
 %     -------
-%     y_real : Non-negative complex spectrum of `x`, with shape as `x` Complex wavelet coefficients 
-%             2D array with shape [n_samples, n_freqs] if `x` is 1D array
-%             3D array with shape [n_samples, n_freqs, n_channels] if `x` is 2D array
+%     y : Non-negative complex spectrum of `x`, with shape as `x` 
 %     
 %     
 % See also FFT
 %
 % Example:
-%
-% n = size(X ,1); %Assuming one or more column-vector signals
-% Y = RFFT(X);
-% X_recover = IRFFT(Y, n);
+% xi = rand(100,1);
+% xi_rfft = rfft(xi);
+% xo = irfft(xi_rfft, 100);
 %
 
 % verify X

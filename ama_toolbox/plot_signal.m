@@ -4,7 +4,7 @@ function plot_signal(x, fs, name)
 %     Parameters
 %     ----------
 %     x : 
-%         1D Signal as column or row Vector 
+%         1D or 2D Signals as column vectors 
 %     fs :
 %         Sampling frequency in Hz
 %     name :
@@ -14,9 +14,9 @@ function plot_signal(x, fs, name)
 time_vector = (0:size(x,1)-1)./fs;
 
 plot(time_vector,x)
-xlabel('Time (s)')
+xlabel('time (s)')
 
-if ~exist('name', 'var') || isempty(name);
+if ~exist('name', 'var') || isempty(name)
     name = 'Signal-01';
 end
 

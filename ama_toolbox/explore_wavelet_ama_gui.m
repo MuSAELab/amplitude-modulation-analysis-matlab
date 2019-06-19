@@ -1,4 +1,4 @@
-function explore_wavelet_ama_gui(X, fs, Name, c_map)
+function explore_wavelet_ama_gui(X, fs, Names, c_map)
 % Analysis of a Signal in Frequency-Frequency Domain
 % Time -> Time-Frequency transformation performed with Wavelet Transform (Complex Morlet)
 %
@@ -6,7 +6,7 @@ function explore_wavelet_ama_gui(X, fs, Name, c_map)
 %  X     Real-valued column-vector signal or set of signals [n_samples, n_channels]
 %  fs    Sampling frequency (Hz)
 % Optional:
-%  Name  (Optional) Name of the signal(s), String or Cell Array (Strings)
+%  Names (Optional) Name of the signal(s), String or Cell Array (Strings)
 %  c_map (Optional) Colormap, Default 'viridis'
 %
 
@@ -28,21 +28,21 @@ end
 % number of channels
 n_channels = size(X, 2);
 
-% verify channel names
-if exist('Name','var') && ischar(Name) && n_channels == 1
-    Name = {Name};
-end
-
 % Validate 'c_map' argumet
 if ~exist('c_map','var') || isempty(c_map)
     c_map = 'viridis';
 end
 
-% generate channel names if needed
-if ~exist('Name','var') || isempty(Name) || numel(Name) ~= n_channels
-    Name = cell(1, n_channels);
+% verify channel names
+if exist('Names','var')
+    if ischar(Names) && n_channels == 1
+        Names = {Names};
+    end
+end
+if ~exist('Names','var') || numel(Names) ~= n_channels
+    Names = cell(1, n_channels);
     for ix = 1 : n_channels
-    Name{ix} = sprintf('Signal-%02d', ix);
+        Names{ix} = sprintf('Signal-%02d', ix);
     end
 end
 
@@ -52,7 +52,7 @@ if exist('./am_functions', 'dir')
 end
 
 % verify dependencies
-if ~exist('wavelet_modulation_spectrogram.m','file');
+if ~exist('wavelet_modulation_spectrogram.m','file')
     error('Dependencies for explore_wavelet_am_gui were not satisfied');
 end
 
@@ -77,7 +77,6 @@ h_tf = [];
 h_area1 = [];
 h_area2 = [];
 x_segments = [];
-name = '';
 
 %% Live GUI
 h_fig = figure('Name', 'Explore Wavelet Amplitude Modulation', 'KeyPressFcn', {@key_pressed_fcn});
@@ -121,7 +120,7 @@ while true
             ix_channel = ix_channel + 5;
             key_pressed = '';
             first_run();
-        case {'u', 'U'};
+        case {'u', 'U'}
             key_pressed = '';
             update_parameters();
     end
@@ -143,7 +142,6 @@ end
 
         % signal for analysis
         x_probe = X(:, ix_channel);
-        name = Name(ix_channel);
 
         % segment of signal under analysis
         x_segments = epoching(x_probe, seg_size_smp, seg_size_smp - seg_shft_smp);
@@ -151,13 +149,13 @@ end
 
         % plot complete time series
         h_ts = subplot(4,2,[1,2]);
-        plot_signal(x_probe(:), fs, name);
+        plot_signal(x_probe(:), fs, Names{ix_channel});
         colorbar();
         time_lim = get(gca, 'XLim' );
         h_area1 = [];
 
         % compute and plot complete spectrogram
-        x_spectrogram = wavelet_spectrogram(x_probe, fs, n_cycles, [], name);
+        x_spectrogram = wavelet_spectrogram(x_probe, fs, n_cycles, [], Names(ix_channel));
         h_tf = subplot(4,2,[3,4]);
         plot_spectrogram_data(x_spectrogram, [], [], freq_range, freq_color, c_map)
         set(gca, 'XLim', time_lim);
@@ -185,21 +183,23 @@ end
         % compute and plot Modulation Spectrogram
         clc;
         disp('computing modulation spectrogram...');
-        x_wavelet_modspec = wavelet_modulation_spectrogram(x, fs, n_cycles, [], 2, [], name);
+        x_wavelet_modspec = wavelet_modulation_spectrogram(x, fs, n_cycles, [], 2, [], Names(ix_channel));
         subplot(4,2,[6,8])
         plot_modulation_spectrogram_data(x_wavelet_modspec, [], freq_range, mfreq_range, mfreq_color,c_map)
         % Uncomment for log axes
         %set(gca,'XScale','log');
         %set(gca,'YScale','log');
 
+        % plot time series for segment
+        subplot(4,2,5)
+        plot_signal(x, fs, Names{ix_channel});
+        colorbar();
+        time_lim = get(gca, 'XLim' );
+
         % plot spectrogram for segment
         subplot(4,2,7)
         plot_spectrogram_data(x_wavelet_modspec.spectrogram_data, [], [], freq_range, freq_color,c_map)
-
-        % plot time series for segment
-        subplot(4,2,5)
-        plot_signal(x, fs, name);
-        colorbar();
+        set(gca, 'XLim', time_lim);
 
         % highlight area under analysis in time series
         seg_ini_sec = (ix_segment - 1) * seg_shft_sec;
@@ -213,7 +213,7 @@ end
 
         % display information about analysis
         clc;
-        fprintf('signal name            : %s\n', name{1} );
+        fprintf('signal name            : %s\n', Names{ix_channel} );
         fprintf('segment size  (seconds): %0.3f\n', seg_size_sec);
         fprintf('segment shift (seconds): %0.3f\n', seg_shft_sec);
         fprintf('segment position  (sec): %0.3f\n', seg_ini_sec)

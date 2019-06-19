@@ -1,5 +1,5 @@
-function psd_data = rfft_psd(x, fs, n_fft, win_funct, channel_names)
-%psd_struct = RFFT_PSD(x, fs, n_fft, win_funct, channel_names)
+function psd_data = rfft_psd(x, fs, n_fft, win_function, channel_names)
+%psd_data = RFFT_PSD(x, fs, n_fft, win_function, channel_names)
 %
 %     Compute the PSD for one or a set of REAL signals.
 %         
@@ -11,7 +11,7 @@ function psd_data = rfft_psd(x, fs, n_fft, win_funct, channel_names)
 %         in Hz
 %     n_fft : Number of samples to compute the FFT
 %             (Default = n_samples in array x)   
-%     win_funct : Window function applied to the signal 
+%     win_function : Window function applied to the signal 
 %         (Default 'Hamming')
 %     channel_names : Names of the signals
 %         (Default Signal-XX with XX 1, 2, ... n_channels) 
@@ -33,7 +33,7 @@ function psd_data = rfft_psd(x, fs, n_fft, win_funct, channel_names)
 %            Number of samples of the signal or signals 'x'
 %        n_fft
 %            Number of elements utilized to perform FFT
-%        win_funct
+%        win_function
 %            Window applied to the data in 'x'
 %        channel_names 
 %            Names of channels
@@ -45,8 +45,8 @@ if ~exist('n_fft','var') || isempty(n_fft)
 end
 
 % validate 'win_name' argument
-if ~exist('win_funct','var') || isempty(win_funct)
-    win_funct = 'hamming';
+if ~exist('win_function','var') || isempty(win_function)
+    win_function = 'hamming';
 end
 
 % validate 'channel_names' argument
@@ -65,7 +65,7 @@ if isempty(channel_names)
 end
 
 % windowing data
-win = window(win_funct, n_samples);
+win = window(win_function, n_samples);
 win_rms = sqrt(sum(win.^2) / n_samples);
 win_mat = repmat(win, 1, n_channels);
 x = x.*win_mat;
@@ -112,5 +112,5 @@ psd_data.freq_axis = f_ax;
 psd_data.freq_delta = f_delta;
 psd_data.n_samples = n_samples;
 psd_data.n_fft = n_fft;
-psd_data.win_funct = win_funct;
+psd_data.win_function = win_function;
 psd_data.channel_names = channel_names;
