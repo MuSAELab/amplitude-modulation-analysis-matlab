@@ -22,7 +22,7 @@ for i_area = 1 : n_areas
     hold on;
     h = fill([x1, x1, x2, x2], y_limits2, color_cell{i_area});
     if ~is_octave()
-        alpha(alpha_v);
+        alpha(h, alpha_v);
     end
     hold off 
 end

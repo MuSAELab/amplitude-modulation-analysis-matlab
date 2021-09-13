@@ -231,7 +231,7 @@ end
         h_area1 = varea([seg_ini_sec, seg_end_sec ],{'g'});
         % highlight area under analysis in Spectrogram
         subplot(h_tf)
-        h_area2 = varea([seg_ini_sec, seg_end_sec ],{'g'}, 0.8);
+        h_area2 = varea([seg_ini_sec, seg_end_sec ],{'g'});
         disp('done!');
 
         % display information about analysis
