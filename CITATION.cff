@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Cassani"
+  given-names: "Raymundo"
+  orcid: "https://orcid.org/0000-0002-3509-5543"
+- family-names: "Albuquerque"
+  given-names: "Isabela"
+- family-names: "Monteiro"
+  given-names: "João"
+- family-names: "Falk"
+  given-names: "Tiago H."
+  orcid: "https://orcid.org/0000-0002-5739-2514"
+title: "Amplitude Modulation Analysis Toolbox"
+url: "https://github.com/MuSAELab/amplitude-modulation-analysis-matlab"
+preferred-citation:
+  type: conference-paper
+  authors:
+  - family-names: "Cassani"
+    given-names: "Raymundo"
+    orcid: "https://orcid.org/0000-0002-3509-5543"
+  - family-names: "Albuquerque"
+    given-names: "Isabela"
+  - family-names: "Monteiro"
+    given-names: "João"
+  - family-names: "Falk"
+    given-names: "Tiago H."
+    orcid: "https://orcid.org/0000-0002-5739-2514"
+  title: "AMA: An Open-source Amplitude Modulation Analysis Toolkit for Signal Processing Applications"
+  year: 2019
+  collection-title: "2019 IEEE Global Conference on Signal and Information Processing (GlobalSIP)"
+  start: "1" # First page number
+  end: "4" # Last page number
+  doi: "10.1109/GlobalSIP45357.2019.8969210"
