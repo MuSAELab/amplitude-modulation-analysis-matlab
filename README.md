@@ -31,5 +31,22 @@ CWT-based amplitude modulation analysis GUI
 ### Example 2: `example_02.m`
 This script shows presents the details in the usage of the low level functions to carry on the signal transformations, as well as plotting functions. Refer to the comments in `example_02.m`
 
+### Citation
+If you use this software, please cite the companion [conference article](https://doi.org/10.1109/GlobalSIP45357.2019.8969210).
+
+**BibTeX**
+```
+@inproceedings{2019_cassani_amAn_Opensource_2019,
+  author = {Cassani, Raymundo and Albuquerque, Isabela and Monteiro, João and Falk, Tiago H.},
+  booktitle = {2019 IEEE Global Conference on Signal and Information Processing (GlobalSIP)},
+  doi = {10.1109/GlobalSIP45357.2019.8969210},
+  pages = {1--4},
+  title = {{AMA: An Open-source Amplitude Modulation Analysis Toolkit for Signal Processing Applications}},
+  year = {2019}
+}
+```
+In addition, the conference poster related to the toolbox can be found [here](https://www.castoriscausa.com/files/cassani_2019_amaposter.pdf).
+
+
 ### Acknowledgement
 The research is based upon work supported by the Office of the Director of National Intelligence (ODNI), Intelligence Advanced Research Projects Activity (IARPA), via IARPA Contract N°2017 - 17042800005 . The views and conclusions con - tained herein are thos e of the authors and should not be interpreted as necessarily representing the official policies or endorsements, either expressed or implied, of the ODNI, IARPA, or the U.S. Government. The U.S. Government is authorized to reproduce and distribute reprint s for Governmental purposes notwithstanding any copyright annotation thereon.
