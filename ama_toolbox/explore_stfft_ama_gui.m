@@ -278,14 +278,27 @@ end
             seg_shft_sec = str2double(answer{2});  % (seconds)
             win_size_sec = str2double(answer{3});  % (seconds)
             win_shft_sec = str2double(answer{4});  % (seconds)
-            freq_range   = str2double(answer{5});  % (Hz)
-            freq_color   = str2double(answer{6});  % (dB)
-            mfreq_range  = str2double(answer{7});  % (Hz)
-            mfreq_color  = str2double(answer{8});  % (dB)
+            freq_range   = validate_range(answer{5});  % (Hz)
+            freq_color   = validate_range(answer{6});  % (dB)
+            mfreq_range  = validate_range(answer{7});  % (Hz)
+            mfreq_color  = validate_range(answer{8});  % (dB)
 
             % call first_run()
             first_run();
         end
+    end
+
+    function out = validate_range(inStr)
+        out = [];
+        strParts = strsplit(inStr);
+        if length(strParts) ~= 2
+            return
+        end
+        numParts = str2double(strParts);
+        if any(isnan(numParts))
+            return
+        end
+        out = numParts;
     end
 
 % if the user press ESC, close the GUI and clean console
